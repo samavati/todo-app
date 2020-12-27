@@ -1,6 +1,7 @@
 import './App.css';
 import TodoItemInfo from './TodoItemInfo';
 import TodoList from './TodoList';
+import Navbar from './Navbar';
 
 function App() {
   return (
