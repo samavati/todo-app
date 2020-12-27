@@ -1,4 +1,5 @@
 import './App.css';
+import TodoItemInfo from './TodoItemInfo';
 import TodoList from './TodoList';
 
 function App() {
@@ -7,6 +8,9 @@ function App() {
       <div className="row">
         <div className="col-12 col-md-6">
           <TodoList />
+        </div>
+        <div className="col-12 col-md-6">
+          <TodoItemInfo />
         </div>
       </div>
     </div>
