@@ -8,7 +8,7 @@ function App() {
     <>
       <Navbar />
       <div className="container-fluid container-md">
-        <div className="row">
+        <div className="row my-3">
           <div className="col-12 col-md-6">
             <TodoList />
           </div>
