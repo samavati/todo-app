@@ -13,12 +13,7 @@ function App() {
             <TodoList />
           </div>
           <div className="col-12 col-md-6">
-            <div className="card">
-              <div className="card-header">New Todo</div>
-              <div className="card-body">
-                <TodoItemInfo />
-              </div>
-            </div>
+            <TodoItemInfo />
           </div>
         </div>
       </div>

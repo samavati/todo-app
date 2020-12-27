@@ -7,14 +7,14 @@ class TodoList extends React.Component {
     render() {
         return (
             <ul className="list-group">
-                {this.props.todoes.map(todo => <Todo date={todo.id} title={todo.content.title} checked={todo.completed} key={todo.id} />)}
+                {this.props.todoes.map(todo => <Todo todo={todo} key={todo.id} />)}
             </ul>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return state
+const mapStateToProps = ({ todoes }) => {
+    return { todoes }
 }
 
 export default connect(mapStateToProps)(TodoList);
