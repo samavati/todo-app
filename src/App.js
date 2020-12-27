@@ -1,7 +1,7 @@
 import './App.css';
-import TodoItemInfo from './TodoItemInfo';
-import TodoList from './TodoList';
-import Navbar from './Navbar';
+import TodoItemInfo from './components/TodoItemInfo';
+import TodoList from './components/TodoList';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
@@ -13,7 +13,12 @@ function App() {
             <TodoList />
           </div>
           <div className="col-12 col-md-6">
-            <TodoItemInfo />
+            <div className="card">
+              <div className="card-header">New Todo</div>
+              <div className="card-body">
+                <TodoItemInfo />
+              </div>
+            </div>
           </div>
         </div>
       </div>
