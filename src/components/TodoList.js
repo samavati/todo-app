@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Todo from './Todo';
 
 class TodoList extends React.Component {
@@ -6,15 +7,14 @@ class TodoList extends React.Component {
     render() {
         return (
             <ul className="list-group">
-                <Todo date="2020/12/31" title="ye chizi" />
-                <Todo date="2020/12/31" title="ye chizi" />
-                <Todo date="2020/12/31" title="ye chizi" />
-                <Todo date="2020/12/31" title="ye chizi" />
-                <Todo date="2020/12/31" title="ye chizi" />
-                <Todo date="2020/12/31" title="ye chizi" />
+                {this.props.todoes.map(todo => <Todo date={todo.id} title={todo.content.title} checked={todo.completed} key={todo.id} />)}
             </ul>
         );
     }
 }
 
-export default TodoList;
+const mapStateToProps = (state) => {
+    return state
+}
+
+export default connect(mapStateToProps)(TodoList);

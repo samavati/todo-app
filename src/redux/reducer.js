@@ -8,7 +8,7 @@ function todoReducer(state = [
             title: 'anjame takalif',
             discription: 'anjam dadane takalife marboot be dars'
         },
-        completed: false
+        completed: true
     }
 ], action) {
     switch (action.type) {
@@ -27,7 +27,7 @@ function todoReducer(state = [
             const { id } = action.payload;
             const newTodoes = [...state];
             const index = newTodoes.findIndex(t => t.id === id);
-            newTodoes[index].completed = !state.byIds[id].completed
+            newTodoes[index].completed = !newTodoes[index].completed
             return newTodoes;
         }
         default:
