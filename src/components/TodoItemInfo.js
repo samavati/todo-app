@@ -8,6 +8,9 @@ class TodoItemInfo extends React.Component {
     onSubmit = (e) => {
         const { todo } = this.props;
         e.preventDefault();
+        if (!todo.content.title) {
+            return;
+        }
         if (todo.id) {
             this.props.updateTodo(todo.id, todo.content);
         } else {
