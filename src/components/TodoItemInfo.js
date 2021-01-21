@@ -2,57 +2,76 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { EMPTY_TODO } from '../redux/reducer';
 import { selectTodo, addTodo, updateTodo } from './../redux/actions';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
-class TodoItemInfo extends React.Component {
+const TodoItemInfo = (props) => {
 
-    onSubmit = (e) => {
-        const { todo } = this.props;
-        e.preventDefault();
-        if (!todo.content.title) {
-            return;
+    const { todo } = props;
+
+    const todoForm = useFormik({
+        enableReinitialize:true,
+        initialValues: {
+            title: todo.content.title,
+            description: todo.content.description
+        },
+        validationSchema: Yup.object({
+            title: Yup.string().required('Required'),
+            description: Yup.string().required('Required')
+        }),
+        onSubmit: (values) => {
+            alert(JSON.stringify(values, null, 2));
+            onSubmit();
         }
+    });
+
+    const onSubmit = () => {
         if (todo.id) {
-            this.props.updateTodo(todo.id, todo.content);
+            props.updateTodo(todo.id, todo.content);
         } else {
-            this.props.addTodo(todo.content)
+            props.addTodo(todo.content)
         }
     }
 
-    render() {
-        const { todo } = this.props;
-        return (
-            <div className="card">
-                <div className="card-header">
-                    <button type="button" class="btn btn-primary" onClick={() => { this.props.selectTodo(EMPTY_TODO) }}>
-                        <i class="fas fa-plus"></i> Add Todo
-                    </button>
-                </div>
-                <div className="card-body">
-                    <form onSubmit={(e) => { this.onSubmit(e) }}>
-                        <div className="mb-3">
-                            <label htmlFor="todoTitle" className="form-label">Todo Title</label>
-                            <input type="text"
-                                className="form-control"
-                                id="todoTitle"
-                                value={todo.content.title}
-                                onChange={(e) => { this.props.selectTodo({ ...todo, content: { ...todo.content, title: e.target.value } }) }} />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="todoDescription" className="form-label">Todo Description</label>
-                            <textarea
-                                className="form-control"
-                                id="todoDescription"
-                                rows="3"
-                                value={todo.content.description}
-                                onChange={(e) => { this.props.selectTodo({ ...todo, content: { ...todo.content, description: e.target.value } }) }}
-                            ></textarea>
-                        </div>
-                        <button type="submit" className="btn btn-primary">Submit</button>
-                    </form>
-                </div>
+    return (
+        <div className="card">
+            <div className="card-header">
+                <button type="button" className="btn btn-primary" onClick={() => { props.selectTodo(EMPTY_TODO) }}>
+                    <i className="fas fa-plus"></i> Add Todo
+                </button>
             </div>
-        );
-    }
+            <div className="card-body">
+                <form onSubmit={todoForm.handleSubmit}>
+                    <div className="mb-3">
+                        <label htmlFor="title" className="form-label">Todo Title</label>
+                        <input type="text"
+                            className={'form-control ' + (todoForm.errors.title && todoForm.touched.title ? 'is-invalid' : '')}
+                            id="title"
+                            name="title"
+                            onChange={todoForm.handleChange}
+                            onBlur={todoForm.handleBlur}
+                            value={todoForm.values.title}
+                        />
+                        {todoForm.errors.title && todoForm.touched.title ? <div>{todoForm.errors.title}</div> : null}
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="description" className="form-label">Todo Description</label>
+                        <textarea
+                            className={'form-control ' + (todoForm.errors.description && todoForm.touched.description ? 'is-invalid' : '')}
+                            id="description"
+                            name="description"
+                            rows="3"
+                            onChange={todoForm.handleChange}
+                            onBlur={todoForm.handleBlur}
+                            value={todoForm.values.description}
+                        ></textarea>
+                        {todoForm.errors.description && todoForm.touched.description ? <div>{todoForm.errors.description}</div> : null}
+                    </div>
+                    <button type="submit" className="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    );
 }
 
 const mapStateToProps = ({ selectedTodo }) => {
