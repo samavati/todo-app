@@ -2,34 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { EMPTY_TODO } from '../redux/reducer';
 import { selectTodo, addTodo, updateTodo } from './../redux/actions';
-import { useFormik } from 'formik';
+import { Form, Field, ErrorMessage, Formik } from 'formik';
 import * as Yup from 'yup';
 
 const TodoItemInfo = (props) => {
 
     const { todo } = props;
 
-    const todoForm = useFormik({
-        enableReinitialize:true,
-        initialValues: {
-            title: todo.content.title,
-            description: todo.content.description
-        },
-        validationSchema: Yup.object({
-            title: Yup.string().required('Required'),
-            description: Yup.string().required('Required')
-        }),
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-            onSubmit();
-        }
-    });
-
-    const onSubmit = () => {
+    const onSubmit = (values) => {
         if (todo.id) {
-            props.updateTodo(todo.id, todo.content);
+            props.updateTodo(todo.id, values);
         } else {
-            props.addTodo(todo.content)
+            props.addTodo(values)
         }
     }
 
@@ -41,36 +25,55 @@ const TodoItemInfo = (props) => {
                 </button>
             </div>
             <div className="card-body">
-                <form onSubmit={todoForm.handleSubmit}>
-                    <div className="mb-3">
-                        <label htmlFor="title" className="form-label">Todo Title</label>
-                        <input type="text"
-                            className={'form-control ' + (todoForm.errors.title && todoForm.touched.title ? 'is-invalid' : '')}
-                            id="title"
-                            name="title"
-                            onChange={todoForm.handleChange}
-                            onBlur={todoForm.handleBlur}
-                            value={todoForm.values.title}
-                        />
-                        {todoForm.errors.title && todoForm.touched.title ? <div>{todoForm.errors.title}</div> : null}
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="description" className="form-label">Todo Description</label>
-                        <textarea
-                            className={'form-control ' + (todoForm.errors.description && todoForm.touched.description ? 'is-invalid' : '')}
-                            id="description"
-                            name="description"
-                            rows="3"
-                            onChange={todoForm.handleChange}
-                            onBlur={todoForm.handleBlur}
-                            value={todoForm.values.description}
-                        ></textarea>
-                        {todoForm.errors.description && todoForm.touched.description ? <div>{todoForm.errors.description}</div> : null}
-                    </div>
-                    <button type="submit" className="btn btn-primary">Submit</button>
-                </form>
+                <Formik
+                    enableReinitialize={true}
+                    initialValues={{
+                        title: todo.content.title,
+                        description: todo.content.description
+                    }}
+                    validationSchema={Yup.object({
+                        title: Yup.string().required('Required'),
+                        description: Yup.string().required('Required')
+                    })}
+                    onSubmit={(values) => {
+                        onSubmit(values);
+                    }}>
+                    {({ errors, touched }) => (
+                        <Form>
+                            <div className="mb-3">
+                                <label htmlFor="title">Todo Title</label>
+                                <Field
+                                    name="title"
+                                    type="text"
+                                    className={
+                                        'form-control ' +
+                                        (errors.title && touched.title ? 'is-invalid ' : '') +
+                                        (!errors.title && touched.title ? 'is-valid' : '')
+                                    } />
+                                <div className="invalid-feedback">
+                                    <ErrorMessage name="title" />
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="description">Todo Description</label>
+                                <Field
+                                    name="description"
+                                    as="textarea"
+                                    className={
+                                        'form-control ' +
+                                        (errors.description && touched.description ? 'is-invalid' : '') +
+                                        (!errors.description && touched.description ? 'is-valid' : '')
+                                    } />
+                                <div className="invalid-feedback">
+                                    <ErrorMessage name="description" />
+                                </div>
+                            </div>
+                            <button type="submit" className="btn btn-primary">Submit</button>
+                        </Form>
+                    )}
+                </Formik>
             </div>
-        </div>
+        </div >
     );
 }
 
